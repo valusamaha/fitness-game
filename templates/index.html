@@ -3,6 +3,7 @@
 <head>
 
 <title>FitQuest</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet" href="/static/style.css">
 
@@ -12,9 +13,20 @@
 
 <div class="container">
 
-<!-- SCREEN 1 — LOGIN -->
+<!-- LOADING -->
 
-<div id="login-screen">
+<div id="loading-screen">
+
+<h1 class="title">⚔️ FitQuest</h1>
+<p>Loading...</p>
+
+</div>
+
+
+
+<!-- LOGIN -->
+
+<div id="login-screen" style="display:none;">
 
 <h1 class="title">⚔️ FitQuest</h1>
 
@@ -26,111 +38,78 @@ placeholder="Enter your name">
 <br><br>
 
 <button onclick="goToAvatar()">
-
 START GAME
-
 </button>
 
 </div>
 
 
 
-<!-- SCREEN 2 — AVATAR SELECTION -->
+<!-- AVATAR -->
 
-<div
-id="avatar-screen"
-style="display:none;">
+<div id="avatar-screen" style="display:none;">
 
-<h2>
+<h2>Choose Your Avatar</h2>
 
-Choose Your Avatar
+<div class="avatar-grid">
 
-</h2>
+<img src="/static/avatars/avatar1.png"
+class="avatar-option"
+onclick="selectAvatar(this)">
+
+<img src="/static/avatars/avatar2.png"
+class="avatar-option"
+onclick="selectAvatar(this)">
+
+<img src="/static/avatars/avatar3.png"
+class="avatar-option"
+onclick="selectAvatar(this)">
+
+</div>
 
 <br>
 
-<img
-src="/static/avatars/avatar1.png"
-width="100"
-onclick="selectAvatar(this)">
-
-<img
-src="/static/avatars/avatar2.png"
-width="100"
-onclick="selectAvatar(this)">
-
-<img
-src="/static/avatars/avatar3.png"
-width="100"
-onclick="selectAvatar(this)">
-
-<br><br>
-
-<button onclick="startGame()">
-
+<button onclick="goToLevels()">
 START PLAYING
-
 </button>
 
 </div>
 
 
 
-<!-- SCREEN 3 — GAME -->
+<!-- LEVEL MAP -->
 
-<div
-id="game-screen"
-style="display:none;">
+<div id="level-screen" style="display:none;">
 
-<img
-id="avatar"
-width="120">
+<h2>Choose Level</h2>
 
-<h1 class="title">
+<div id="level-grid"></div>
 
-⚔️ FitQuest
+</div>
 
-</h1>
+
+
+<!-- GAME -->
+
+<div id="game-screen" style="display:none;">
+
+<img id="avatar" width="120">
+
+<h1 class="title">⚔️ FitQuest</h1>
 
 <h2 id="welcome"></h2>
 
-
-
 <div class="card">
 
-<h2>
-
+<h2 id="rank">
 LEVEL 1 — RECRUIT
-
 </h2>
 
-<p>
+<p>XP: <span id="xp">0</span></p>
 
-XP: <span id="xp">0</span>
+<p>HP: <span id="hp">100</span></p>
 
-</p>
-
-<div class="progress-bar">
-
-<div
-class="progress"
-id="progress">
-
-</div>
-
-</div>
-
-<p>
-
-HP: <span id="hp">100</span>
-
-</p>
-
-<p>
-
-Gold: <span id="gold">0</span>
-
-</p>
+<p>Gold: <span id="gold">0</span></p>
 
 </div>
 
@@ -138,25 +117,47 @@ Gold: <span id="gold">0</span>
 
 <div class="quest-card">
 
-<h3>
+<h3>Daily Quest</h3>
 
-Daily Quest
+<div class="exercise">
 
-</h3>
+<p>Complete 20 Pushups</p>
 
-<p>
+<button onclick="startExercise(0)">
+START VIDEO
+</button>
 
-Complete 20 Pushups
+<span id="done0"></span>
 
-</p>
+</div>
 
 <br>
 
-<button onclick="startCamera()">
+<div class="exercise">
 
-START VIDEO WORKOUT
+<p>Complete 20 Squats</p>
 
+<button onclick="startExercise(1)">
+START VIDEO
 </button>
+
+<span id="done1"></span>
+
+</div>
+
+<br>
+
+<div class="exercise">
+
+<p>Complete 30 Jumping Jacks</p>
+
+<button onclick="startExercise(2)">
+START VIDEO
+</button>
+
+<span id="done2"></span>
+
+</div>
 
 <br><br>
 
@@ -164,34 +165,62 @@ START VIDEO WORKOUT
 id="video"
 width="300"
 autoplay>
-
 </video>
 
-</div>
+<br><br>
 
+<button
+id="completeBtn"
+onclick="completeLevel()"
+disabled>
 
-
-<div class="buttons">
-
-<button onclick="completeWorkout()">
-
-START QUEST
-
-</button>
-
-<button onclick="extraWorkout()">
-
-EXTRA TRAINING
-
-</button>
-
-<button onclick="missedDay()">
-
-REST DAY
+COMPLETE LEVEL
 
 </button>
 
 </div>
+
+</div>
+
+
+
+<!-- REWARD -->
+
+<div id="reward-screen" style="display:none;">
+
+<h1 class="title">
+LEVEL COMPLETE
+</h1>
+
+<p>XP: <span id="rewardXP"></span></p>
+<p>HP: <span id="rewardHP"></span></p>
+<p>Gold: <span id="rewardGold"></span></p>
+
+<br>
+
+<h2>Mystery Shop</h2>
+
+<button onclick="buyItem('Sword',50)">
+Buy Sword - 50 Gold
+</button>
+
+<br>
+
+<button onclick="buyItem('Shield',30)">
+Buy Shield - 30 Gold
+</button>
+
+<br>
+
+<button onclick="buyItem('Potion',20)">
+Buy Potion - 20 Gold
+</button>
+
+<br><br>
+
+<button onclick="backToLevels()">
+BACK TO LEVEL MAP
+</button>
 
 </div>
 

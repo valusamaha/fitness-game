@@ -1,287 +1,337 @@
 let playerName = ""
 let avatarSrc = ""
 
-/* -------------------------
-   SCREEN FLOW
---------------------------*/
+let gameData = {
+
+level: 1,
+xp: 0,
+hp: 100,
+gold: 0,
+inventory: []
+
+}
+
+let exercisesDone = [false, false, false]
+
+
+
+/* LOADING */
+
+setTimeout(() => {
+
+document.getElementById("loading-screen").style.display = "none"
+document.getElementById("login-screen").style.display = "block"
+
+}, 2000)
+
+
+
+/* LOGIN */
 
 function goToAvatar() {
 
-    playerName =
-        document.getElementById("username").value
+playerName =
+document.getElementById("username").value
 
-    if (playerName === "") {
+if (playerName === "") {
 
-        alert("Enter your name first!")
+alert("Enter your name first!")
+return
 
-        return
+}
 
-    }
-
-    document.getElementById("login-screen")
-        .style.display = "none"
-
-    document.getElementById("avatar-screen")
-        .style.display = "block"
+document.getElementById("login-screen").style.display = "none"
+document.getElementById("avatar-screen").style.display = "block"
 
 }
 
 
-/* -------------------------
-   AVATAR SELECTION
---------------------------*/
+
+/* AVATAR */
 
 function selectAvatar(img) {
 
-    avatarSrc = img.src
+let avatars =
+document.querySelectorAll(".avatar-option")
 
-}
+avatars.forEach(a => {
 
+a.classList.remove("selected")
 
-/* -------------------------
-   START GAME
---------------------------*/
+})
 
-function startGame() {
+img.classList.add("selected")
 
-    if (avatarSrc === "") {
-
-        alert("Select an avatar first!")
-
-        return
-
-    }
-
-    document.getElementById("avatar-screen")
-        .style.display = "none"
-
-    document.getElementById("game-screen")
-        .style.display = "block"
-
-    document.getElementById("welcome")
-        .innerText =
-        "Welcome, " + playerName + " ⚔️"
-
-    document.getElementById("avatar")
-        .src = avatarSrc
-
-}
-
-
-/* -------------------------
-   UPDATE GAME UI
---------------------------*/
-
-function updateUI(data) {
-
-    document.getElementById("xp").innerText =
-        data.xp
-
-    document.getElementById("hp").innerText =
-        data.hp
-
-    document.getElementById("gold").innerText =
-        data.gold
-
-    let progress =
-        data.xp % 100
-
-    document.getElementById("progress")
-        .style.width =
-        progress + "%"
-
-
-
-    /* Rank system */
-
-    if (data.level <= 10)
-
-        document.getElementById("rank")
-            .innerText =
-            "LEVEL " +
-            data.level +
-            " — RECRUIT"
-
-    else if (data.level <= 30)
-
-        document.getElementById("rank")
-            .innerText =
-            "LEVEL " +
-            data.level +
-            " — WARRIOR"
-
-    else
-
-        document.getElementById("rank")
-            .innerText =
-            "LEVEL " +
-            data.level +
-            " — LEGEND"
-
-}
-
-
-/* -------------------------
-   WORKOUT ACTIONS
---------------------------*/
-
-function completeWorkout() {
-
-    fetch("/complete_workout", {
-
-        method: "POST",
-
-        headers: {
-
-            "Content-Type":
-                "application/json"
-
-        },
-
-        body: JSON.stringify({
-
-            workout: "normal"
-
-        })
-
-    })
-
-    .then(res => res.json())
-
-    .then(data => {
-
-        updateUI(data)
-
-        saveProgress(data)
-
-    })
+avatarSrc = img.src
 
 }
 
 
 
-function extraWorkout() {
+/* LEVEL MAP */
 
-    fetch("/complete_workout", {
+function goToLevels() {
 
-        method: "POST",
+if (avatarSrc === "") {
 
-        headers: {
+alert("Select an avatar first!")
+return
 
-            "Content-Type":
-                "application/json"
+}
 
-        },
+document.getElementById("avatar-screen").style.display = "none"
+document.getElementById("level-screen").style.display = "block"
 
-        body: JSON.stringify({
-
-            workout: "extra"
-
-        })
-
-    })
-
-    .then(res => res.json())
-
-    .then(data => {
-
-        updateUI(data)
-
-        saveProgress(data)
-
-    })
+generateLevels()
 
 }
 
 
 
-function missedDay() {
+function generateLevels() {
 
-    fetch("/missed_day", {
+let grid =
+document.getElementById("level-grid")
 
-        method: "POST"
+grid.innerHTML = ""
 
-    })
+for (let i = 1; i <= 100; i++) {
 
-    .then(res => res.json())
+let box =
+document.createElement("div")
 
-    .then(data => {
+box.className = "level-box"
 
-        updateUI(data)
+if (i > gameData.level) {
 
-        saveProgress(data)
+box.classList.add("locked")
+box.innerText = "🔒"
 
-    })
+}
+
+else {
+
+box.innerText = i
+
+box.onclick = function () {
+
+startLevel(i)
+
+}
+
+}
+
+grid.appendChild(box)
+
+}
 
 }
 
 
-/* -------------------------
-   SAVE PROGRESS
---------------------------*/
 
-function saveProgress(data) {
+function startLevel(level) {
 
-    localStorage.setItem(
+document.getElementById("level-screen").style.display = "none"
+document.getElementById("game-screen").style.display = "block"
 
-        "fitquest_data",
+document.getElementById("welcome").innerText =
+"Welcome, " + playerName
 
-        JSON.stringify(data)
+document.getElementById("avatar").src =
+avatarSrc
 
-    )
+resetExercises()
+
+updateUI()
 
 }
 
 
-/* -------------------------
-   LOAD SAVED PROGRESS
---------------------------*/
+
+function resetExercises() {
+
+exercisesDone = [false, false, false]
+
+for (let i = 0; i < 3; i++) {
+
+document.getElementById("done" + i).innerText = ""
+
+}
+
+document.getElementById("completeBtn").disabled = true
+
+}
+
+
+
+/* VIDEO */
+
+function startExercise(index) {
+
+navigator.mediaDevices
+.getUserMedia({
+video: true
+})
+.then(function(stream) {
+
+let video =
+document.getElementById("video")
+
+video.srcObject = stream
+
+})
+
+exercisesDone[index] = true
+
+document.getElementById(
+"done" + index
+).innerText = " ✅"
+
+checkAllDone()
+
+}
+
+
+
+function checkAllDone() {
+
+if (
+
+exercisesDone[0] &&
+exercisesDone[1] &&
+exercisesDone[2]
+
+) {
+
+document.getElementById(
+"completeBtn"
+).disabled = false
+
+}
+
+}
+
+
+
+/* COMPLETE */
+
+function completeLevel() {
+
+gameData.xp += 100
+gameData.gold += 50
+
+if (gameData.level < 100) {
+
+gameData.level += 1
+
+}
+
+saveProgress()
+
+showRewards()
+
+}
+
+
+
+function showRewards() {
+
+document.getElementById("game-screen").style.display = "none"
+document.getElementById("reward-screen").style.display = "block"
+
+document.getElementById("rewardXP").innerText =
+gameData.xp
+
+document.getElementById("rewardHP").innerText =
+gameData.hp
+
+document.getElementById("rewardGold").innerText =
+gameData.gold
+
+}
+
+
+
+/* SHOP */
+
+function buyItem(item, cost) {
+
+if (gameData.gold < cost) {
+
+alert("Not enough gold!")
+return
+
+}
+
+gameData.gold -= cost
+
+gameData.inventory.push(item)
+
+alert(item + " purchased!")
+
+saveProgress()
+
+showRewards()
+
+}
+
+
+
+/* BACK */
+
+function backToLevels() {
+
+document.getElementById("reward-screen").style.display = "none"
+document.getElementById("level-screen").style.display = "block"
+
+generateLevels()
+
+}
+
+
+
+/* UPDATE */
+
+function updateUI() {
+
+document.getElementById("xp").innerText =
+gameData.xp
+
+document.getElementById("hp").innerText =
+gameData.hp
+
+document.getElementById("gold").innerText =
+gameData.gold
+
+}
+
+
+
+/* SAVE */
+
+function saveProgress() {
+
+localStorage.setItem(
+"fitquest_data",
+JSON.stringify(gameData)
+)
+
+}
+
+
+
+/* LOAD */
 
 window.onload = function() {
 
-    let saved =
+let saved =
+localStorage.getItem("fitquest_data")
 
-        localStorage.getItem(
+if (saved) {
 
-            "fitquest_data"
-
-        )
-
-    if (saved) {
-
-        let data =
-
-            JSON.parse(saved)
-
-        updateUI(data)
-
-    }
+gameData =
+JSON.parse(saved)
 
 }
-
-
-/* -------------------------
-   VIDEO CAMERA
---------------------------*/
-
-function startCamera() {
-
-    navigator.mediaDevices
-
-        .getUserMedia({
-
-            video: true
-
-        })
-
-        .then(function(stream) {
-
-            let video =
-
-                document.getElementById("video")
-
-            video.srcObject = stream
-
-        })
 
 }

@@ -1,58 +1,132 @@
 body {
-    background-color: #0b0f1a;
-    font-family: Arial, Helvetica, sans-serif;
-    color: white;
-    text-align: center;
+
+background-color: #0b0f1a;
+font-family: Arial;
+color: white;
+text-align: center;
+
 }
 
 .container {
-    margin-top: 40px;
+
+margin-top: 40px;
+
 }
 
 .title {
-    font-size: 40px;
-    color: #00e6ff;
+
+font-size: 40px;
+color: #00e6ff;
+
 }
 
-.card {
-    background-color: #1c2333;
-    padding: 20px;
-    margin: 20px auto;
-    width: 300px;
-    border-radius: 10px;
-}
 
+
+.card,
 .quest-card {
-    background-color: #16213e;
-    padding: 20px;
-    width: 300px;
-    margin: auto;
-    border-radius: 10px;
+
+background-color: #1c2333;
+padding: 20px;
+margin: 20px auto;
+width: 320px;
+border-radius: 10px;
+
 }
 
-.progress-bar {
-    width: 100%;
-    background-color: #444;
-    border-radius: 5px;
-}
 
-.progress {
-    width: 0%;
-    height: 20px;
-    background-color: #00ffcc;
-    border-radius: 5px;
-}
 
 button {
-    margin: 10px;
-    padding: 12px 18px;
-    font-size: 16px;
-    background-color: #00e6ff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+
+margin: 10px;
+padding: 12px 18px;
+font-size: 16px;
+background-color: #00e6ff;
+border: none;
+border-radius: 6px;
+cursor: pointer;
+
 }
 
-button:hover {
-    background-color: #00bcd4;
+button:disabled {
+
+background-color: gray;
+
+}
+
+
+
+/* Avatar */
+
+.avatar-grid {
+
+display: flex;
+justify-content: center;
+
+}
+
+.avatar-option {
+
+width: 100px;
+margin: 10px;
+cursor: pointer;
+border: 3px solid transparent;
+border-radius: 12px;
+
+}
+
+.avatar-option.selected {
+
+border: 3px solid #00bfff;
+
+}
+
+
+
+/* Level Grid */
+
+#level-grid {
+
+display: grid;
+grid-template-columns: repeat(5, 60px);
+gap: 15px;
+justify-content: center;
+
+}
+
+.level-box {
+
+width: 60px;
+height: 60px;
+background-color: #1c2333;
+border-radius: 10px;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+
+}
+
+.locked {
+
+background-color: #555;
+
+}
+
+
+
+@media (max-width: 600px) {
+
+.card,
+.quest-card {
+
+width: 90%;
+
+}
+
+.avatar-option {
+
+width: 80px;
+
+}
+
 }
