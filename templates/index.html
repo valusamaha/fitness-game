@@ -1,75 +1,201 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>FitQuest Game</title>
-    <link rel="stylesheet" href="/static/style.css">
+
+<title>FitQuest</title>
+
+<link rel="stylesheet" href="/static/style.css">
+
 </head>
 
 <body>
 
 <div class="container">
 
-    <!-- LOGIN SCREEN -->
-    <div id="login-screen">
+<!-- SCREEN 1 — LOGIN -->
 
-        <h1 class="title">⚔️ FitQuest</h1>
+<div id="login-screen">
 
-        <input type="text" id="username" placeholder="Enter your name">
+<h1 class="title">⚔️ FitQuest</h1>
 
-        <br><br>
+<input
+type="text"
+id="username"
+placeholder="Enter your name">
 
-        <button onclick="startGame()">START GAME</button>
+<br><br>
 
-    </div>
-      
-     <div class="avatar-box">
+<button onclick="goToAvatar()">
 
-    <img id="avatar"
-         src="/static/avatars/recruit.png"
-         width="120">
+START GAME
 
-</div>
-
-    <!-- GAME SCREEN -->
-    <div id="game-screen" style="display:none;">
-
-        <h1 class="title">⚔️ FitQuest</h1>
-
-        <h2 id="welcome"></h2>
-
-        <div class="card">
-            <h2 id="rank">LEVEL 1 — RECRUIT</h2>
-            <p>XP: <span id="xp">0</span></p>
-
-            <div class="progress-bar">
-                <div class="progress" id="progress"></div>
-            </div>
-
-            <p>HP: <span id="hp">100</span></p>
-            <p>Gold: <span id="gold">0</span></p>
-        </div>
-
-        <div class="quest-card">
-            <h3>Daily Quest</h3>
-            <p>Complete 20 Pushups</p>
-        </div>
-
-        <div class="buttons">
-            <button onclick="completeWorkout()">START QUEST</button>
-            <button onclick="extraWorkout()">EXTRA TRAINING</button>
-            <button onclick="missedDay()">REST DAY</button>
-        </div>
-
-    </div>
-
-</div>
-<button onclick="startCamera()">
-START VIDEO WORKOUT
 </button>
-<video id="video"
-       width="300"
-       autoplay>
+
+</div>
+
+
+
+<!-- SCREEN 2 — AVATAR SELECTION -->
+
+<div
+id="avatar-screen"
+style="display:none;">
+
+<h2>
+
+Choose Your Avatar
+
+</h2>
+
+<br>
+
+<img
+src="/static/avatars/avatar1.png"
+width="100"
+onclick="selectAvatar(this)">
+
+<img
+src="/static/avatars/avatar2.png"
+width="100"
+onclick="selectAvatar(this)">
+
+<img
+src="/static/avatars/avatar3.png"
+width="100"
+onclick="selectAvatar(this)">
+
+<br><br>
+
+<button onclick="startGame()">
+
+START PLAYING
+
+</button>
+
+</div>
+
+
+
+<!-- SCREEN 3 — GAME -->
+
+<div
+id="game-screen"
+style="display:none;">
+
+<img
+id="avatar"
+width="120">
+
+<h1 class="title">
+
+⚔️ FitQuest
+
+</h1>
+
+<h2 id="welcome"></h2>
+
+
+
+<div class="card">
+
+<h2>
+
+LEVEL 1 — RECRUIT
+
+</h2>
+
+<p>
+
+XP: <span id="xp">0</span>
+
+</p>
+
+<div class="progress-bar">
+
+<div
+class="progress"
+id="progress">
+
+</div>
+
+</div>
+
+<p>
+
+HP: <span id="hp">100</span>
+
+</p>
+
+<p>
+
+Gold: <span id="gold">0</span>
+
+</p>
+
+</div>
+
+
+
+<div class="quest-card">
+
+<h3>
+
+Daily Quest
+
+</h3>
+
+<p>
+
+Complete 20 Pushups
+
+</p>
+
+<br>
+
+<button onclick="startCamera()">
+
+START VIDEO WORKOUT
+
+</button>
+
+<br><br>
+
+<video
+id="video"
+width="300"
+autoplay>
+
 </video>
+
+</div>
+
+
+
+<div class="buttons">
+
+<button onclick="completeWorkout()">
+
+START QUEST
+
+</button>
+
+<button onclick="extraWorkout()">
+
+EXTRA TRAINING
+
+</button>
+
+<button onclick="missedDay()">
+
+REST DAY
+
+</button>
+
+</div>
+
+</div>
+
+</div>
 
 <script src="/static/script.js"></script>
 
