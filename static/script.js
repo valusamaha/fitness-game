@@ -15,6 +15,17 @@ function startGame() {
 }
 function updateUI(data) {
 
+    if (data.level <= 10)
+    document.getElementById("avatar").src =
+        "/static/avatars/recruit.png"
+
+else if (data.level <= 30)
+    document.getElementById("avatar").src =
+        "/static/avatars/warrior.png"
+
+else
+    document.getElementById("avatar").src =
+        "/static/avatars/legend.png"
     document.getElementById("xp").innerText = data.xp
     document.getElementById("hp").innerText = data.hp
     document.getElementById("gold").innerText = data.gold
@@ -49,7 +60,10 @@ function completeWorkout() {
         })
     })
     .then(res => res.json())
-    .then(data => updateUI(data))
+    .then(data => {
+    updateUI(data)
+    saveProgress(data)
+})
 
 }
 
@@ -65,7 +79,10 @@ function extraWorkout() {
         })
     })
     .then(res => res.json())
-    .then(data => updateUI(data))
+    .then(data => {
+    updateUI(data)
+    saveProgress(data)
+})
 
 }
 
@@ -75,6 +92,46 @@ function missedDay() {
         method: "POST"
     })
     .then(res => res.json())
-    .then(data => updateUI(data))
+    .then(data => {
+    updateUI(data)
+    saveProgress(data)
+})
+
+}
+
+function saveProgress(data) {
+
+    localStorage.setItem(
+        "fitquest_data",
+        JSON.stringify(data)
+    )
+
+}
+window.onload = function() {
+
+    let saved =
+        localStorage.getItem("fitquest_data")
+
+    if (saved) {
+
+        let data = JSON.parse(saved)
+
+        updateUI(data)
+
+    }
+
+}
+function startCamera() {
+
+    navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then(function(stream) {
+
+            let video =
+                document.getElementById("video")
+
+            video.srcObject = stream
+
+        })
 
 }
