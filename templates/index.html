@@ -4,26 +4,55 @@
     <title>FitQuest Game</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
 
-<h1>🏋️ FitQuest</h1>
+<div class="container">
 
-<h2>Level: <span id="level">1</span></h2>
-<h2>XP: <span id="xp">0</span></h2>
-<h2>HP: <span id="hp">100</span></h2>
-<h2>Gold: <span id="gold">0</span></h2>
+    <h1 class="title">⚔️ FitQuest</h1>
 
-<button onclick="completeWorkout()">
-Complete Workout
-</button>
+    <div class="card">
 
-<button onclick="extraWorkout()">
-Extra Workout
-</button>
+        <h2 id="rank">LEVEL 1 — RECRUIT</h2>
 
-<button onclick="missedDay()">
-Missed Day
-</button>
+        <p>XP: <span id="xp">0</span></p>
+
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+
+        <p>HP: <span id="hp">100</span></p>
+        <p>Gold: <span id="gold">0</span></p>
+
+    </div>
+
+    <div class="quest-card">
+
+        <h3>Daily Quest</h3>
+
+        <p>
+        Complete 20 Pushups
+        </p>
+
+    </div>
+
+    <div class="buttons">
+
+        <button onclick="completeWorkout()">
+        START QUEST
+        </button>
+
+        <button onclick="extraWorkout()">
+        EXTRA TRAINING
+        </button>
+
+        <button onclick="missedDay()">
+        REST DAY
+        </button>
+
+    </div>
+
+</div>
 
 <script src="/static/script.js"></script>
 

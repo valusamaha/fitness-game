@@ -1,9 +1,24 @@
 function updateUI(data) {
 
-    document.getElementById("level").innerText = data.level
     document.getElementById("xp").innerText = data.xp
     document.getElementById("hp").innerText = data.hp
     document.getElementById("gold").innerText = data.gold
+
+    let progress = data.xp % 100
+    document.getElementById("progress").style.width =
+        progress + "%"
+
+    if (data.level <= 10)
+        document.getElementById("rank").innerText =
+        "LEVEL " + data.level + " — RECRUIT"
+
+    else if (data.level <= 30)
+        document.getElementById("rank").innerText =
+        "LEVEL " + data.level + " — WARRIOR"
+
+    else
+        document.getElementById("rank").innerText =
+        "LEVEL " + data.level + " — LEGEND"
 
 }
 
