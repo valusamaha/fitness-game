@@ -2,128 +2,66 @@ let playerName = ""
 let avatarSrc = ""
 
 let gameData = {
-
 level: 1,
 xp: 0,
 hp: 100,
-gold: 0,
-inventory: []
-
+gold: 0
 }
 
-let exercisesDone = [false, false, false]
+let exercisesDone = {}
 
-
-
-/* LOADING */
-
-setTimeout(() => {
-
-document.getElementById("loading-screen").style.display = "none"
-document.getElementById("login-screen").style.display = "block"
-
-}, 2000)
-
-
-
-/* LOGIN */
-
-function goToAvatar() {
-
-playerName =
-document.getElementById("username").value
-
-if (playerName === "") {
-
-alert("Enter your name first!")
-return
-
+let counters = {
+squat: 0,
+pushup: 0,
+jack: 0
 }
 
-document.getElementById("login-screen").style.display = "none"
-document.getElementById("avatar-screen").style.display = "block"
-
+let positions = {
+squat: "up",
+pushup: "up",
+jack: "down"
 }
 
 
 
-/* AVATAR */
+const levelConfig = {
 
-function selectAvatar(img) {
+1: [{ type: "squat", reps: 20 }],
 
-let avatars =
-document.querySelectorAll(".avatar-option")
+2: [{ type: "jack", reps: 20 }],
 
-avatars.forEach(a => {
+3: [
+{ type: "squat", reps: 20 },
+{ type: "jack", reps: 20 }
+],
 
-a.classList.remove("selected")
+4: [{ type: "pushup", reps: 20 }],
 
-})
+5: [
+{ type: "squat", reps: 20 },
+{ type: "pushup", reps: 20 }
+],
 
-img.classList.add("selected")
+6: [
+{ type: "pushup", reps: 20 },
+{ type: "jack", reps: 20 }
+],
 
-avatarSrc = img.src
+7: [
+{ type: "squat", reps: 20 },
+{ type: "pushup", reps: 20 },
+{ type: "jack", reps: 20 }
+],
 
-}
+8: [{ type: "squat", reps: 25 }],
 
+9: [{ type: "pushup", reps: 25 }],
 
-
-/* LEVEL MAP */
-
-function goToLevels() {
-
-if (avatarSrc === "") {
-
-alert("Select an avatar first!")
-return
-
-}
-
-document.getElementById("avatar-screen").style.display = "none"
-document.getElementById("level-screen").style.display = "block"
-
-generateLevels()
-
-}
-
-
-
-function generateLevels() {
-
-let grid =
-document.getElementById("level-grid")
-
-grid.innerHTML = ""
-
-for (let i = 1; i <= 100; i++) {
-
-let box =
-document.createElement("div")
-
-box.className = "level-box"
-
-if (i > gameData.level) {
-
-box.classList.add("locked")
-box.innerText = "🔒"
-
-}
-
-else {
-
-box.innerText = i
-
-box.onclick = function () {
-
-startLevel(i)
-
-}
-
-}
-
-grid.appendChild(box)
-
-}
+10: [
+{ type: "squat", reps: 30 },
+{ type: "pushup", reps: 30 },
+{ type: "jack", reps: 30 }
+]
 
 }
 
@@ -134,223 +72,81 @@ function startLevel(level) {
 document.getElementById("level-screen").style.display = "none"
 document.getElementById("game-screen").style.display = "block"
 
-document.getElementById("welcome").innerText =
-"Welcome, " + playerName
+renderExercises(level)
 
-document.getElementById("avatar").src =
-avatarSrc
-
-resetExercises()
-
-updateUI()
+resetCounters()
 
 }
 
 
 
-function resetExercises() {
+function renderExercises(level) {
 
-exercisesDone = [false, false, false]
+let container =
+document.getElementById("exerciseList")
 
-for (let i = 0; i < 3; i++) {
+container.innerHTML = ""
 
-document.getElementById("done" + i).innerText = ""
+let exercises =
+levelConfig[level]
 
-}
+exercises.forEach((ex, index) => {
 
-document.getElementById("completeBtn").disabled = true
+let div =
+document.createElement("div")
 
-}
+div.className = "exercise"
 
+div.innerHTML =
 
+`
+<p>Complete ${ex.reps} ${ex.type.toUpperCase()}</p>
 
-/* VIDEO */
+<button onclick="startExercise('${ex.type}', ${ex.reps})">
+START VIDEO
+</button>
 
-function startExercise(index) {
+<h3 id="${ex.type}Counter">
+${ex.type}: 0
+</h3>
 
-navigator.mediaDevices
-.getUserMedia({
-video: true
-})
-.then(function(stream) {
+<span id="done-${ex.type}"></span>
+`
 
-let video =
-document.getElementById("video")
-
-video.srcObject = stream
+container.appendChild(div)
 
 })
 
-exercisesDone[index] = true
+}
 
-document.getElementById(
-"done" + index
-).innerText = " ✅"
 
-checkAllDone()
+
+function resetCounters() {
+
+counters = {
+squat: 0,
+pushup: 0,
+jack: 0
+}
+
+exercisesDone = {}
 
 }
 
 
 
-function checkAllDone() {
-
-if (
-
-exercisesDone[0] &&
-exercisesDone[1] &&
-exercisesDone[2]
-
-) {
-
-document.getElementById(
-"completeBtn"
-).disabled = false
-
-}
-
-}
-
-
-
-/* COMPLETE */
-
-function completeLevel() {
-
-gameData.xp += 100
-gameData.gold += 50
-
-if (gameData.level < 100) {
-
-gameData.level += 1
-
-}
-
-saveProgress()
-
-showRewards()
-
-}
-
-
-
-function showRewards() {
-
-document.getElementById("game-screen").style.display = "none"
-document.getElementById("reward-screen").style.display = "block"
-
-document.getElementById("rewardXP").innerText =
-gameData.xp
-
-document.getElementById("rewardHP").innerText =
-gameData.hp
-
-document.getElementById("rewardGold").innerText =
-gameData.gold
-
-}
-
-
-
-/* SHOP */
-
-function buyItem(item, cost) {
-
-if (gameData.gold < cost) {
-
-alert("Not enough gold!")
-return
-
-}
-
-gameData.gold -= cost
-
-gameData.inventory.push(item)
-
-alert(item + " purchased!")
-
-saveProgress()
-
-showRewards()
-
-}
-
-
-
-/* BACK */
-
-function backToLevels() {
-
-document.getElementById("reward-screen").style.display = "none"
-document.getElementById("level-screen").style.display = "block"
-
-generateLevels()
-
-}
-
-
-
-/* UPDATE */
-
-function updateUI() {
-
-document.getElementById("xp").innerText =
-gameData.xp
-
-document.getElementById("hp").innerText =
-gameData.hp
-
-document.getElementById("gold").innerText =
-gameData.gold
-
-}
-
-
-
-/* SAVE */
-
-function saveProgress() {
-
-localStorage.setItem(
-"fitquest_data",
-JSON.stringify(gameData)
-)
-
-}
-
-
-
-/* LOAD */
-
-window.onload = function() {
-
-let saved =
-localStorage.getItem("fitquest_data")
-
-if (saved) {
-
-gameData =
-JSON.parse(saved)
-
-}
-
-}
-
-let squatCount = 0
-let squatPosition = "up"
-
-function startSquatAI() {
+function startExercise(type, reps) {
 
 navigator.mediaDevices
 .getUserMedia({ video: true })
-.then(function(stream) {
+.then(stream => {
 
 let video =
 document.getElementById("video")
 
 video.srcObject = stream
 
-initializePose(video)
+initializePose(video, type, reps)
 
 })
 
@@ -358,29 +154,23 @@ initializePose(video)
 
 
 
-function initializePose(videoElement) {
+function initializePose(videoElement, type, reps) {
 
 const pose = new Pose({
 
-locateFile: (file) => {
+locateFile: file =>
 
-return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`
-
-}
+`https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`
 
 })
 
 pose.setOptions({
-
-modelComplexity: 0,
-smoothLandmarks: true,
-enableSegmentation: false,
-minDetectionConfidence: 0.5,
-minTrackingConfidence: 0.5
-
+modelComplexity: 0
 })
 
-pose.onResults(onResults)
+pose.onResults(results =>
+onResults(results, type, reps)
+)
 
 
 
@@ -405,12 +195,27 @@ camera.start()
 
 
 
-function onResults(results) {
+function onResults(results, type, reps) {
 
 if (!results.poseLandmarks)
 return
 
 
+
+if (type === "squat")
+detectSquat(results, reps)
+
+if (type === "pushup")
+detectPushup(results, reps)
+
+if (type === "jack")
+detectJumpingJack(results, reps)
+
+}
+
+
+
+function detectSquat(results, reps) {
 
 let hip =
 results.poseLandmarks[24]
@@ -421,32 +226,107 @@ results.poseLandmarks[26]
 let ankle =
 results.poseLandmarks[28]
 
-
-
 let angle =
-calculateAngle(
-hip,
-knee,
-ankle
-)
+calculateAngle(hip, knee, ankle)
 
 
 
-if (angle < 90 && squatPosition === "up") {
+if (angle < 90 && positions.squat === "up")
+positions.squat = "down"
 
-squatPosition = "down"
+
+
+if (angle > 160 && positions.squat === "down") {
+
+positions.squat = "up"
+
+counters.squat++
+
+updateCounter("squat", reps)
+
+}
 
 }
 
 
 
-if (angle > 160 && squatPosition === "down") {
+function detectPushup(results, reps) {
 
-squatPosition = "up"
+let shoulder =
+results.poseLandmarks[12]
 
-squatCount++
+let elbow =
+results.poseLandmarks[14]
 
-updateSquatUI()
+let wrist =
+results.poseLandmarks[16]
+
+let angle =
+calculateAngle(shoulder, elbow, wrist)
+
+
+
+if (angle < 90 && positions.pushup === "up")
+positions.pushup = "down"
+
+
+
+if (angle > 160 && positions.pushup === "down") {
+
+positions.pushup = "up"
+
+counters.pushup++
+
+updateCounter("pushup", reps)
+
+}
+
+}
+
+
+
+function detectJumpingJack(results, reps) {
+
+let leftHand =
+results.poseLandmarks[15]
+
+let rightHand =
+results.poseLandmarks[16]
+
+let leftFoot =
+results.poseLandmarks[27]
+
+let rightFoot =
+results.poseLandmarks[28]
+
+
+
+let handsUp =
+leftHand.y < 0.4 &&
+rightHand.y < 0.4
+
+
+
+let feetWide =
+Math.abs(leftFoot.x - rightFoot.x) > 0.4
+
+
+
+if (handsUp && feetWide &&
+positions.jack === "down")
+
+positions.jack = "up"
+
+
+
+if (!handsUp && !feetWide &&
+positions.jack === "up") {
+
+positions.jack = "down"
+
+counters.jack++
+
+updateCounter("jack", reps)
 
 }
 
@@ -457,17 +337,13 @@ updateSquatUI()
 function calculateAngle(a, b, c) {
 
 let ab = {
-
 x: a.x - b.x,
 y: a.y - b.y
-
 }
 
 let cb = {
-
 x: c.x - b.x,
 y: c.y - b.y
-
 }
 
 
@@ -479,28 +355,15 @@ ab.y * cb.y
 
 
 let magAB =
-Math.sqrt(
-ab.x * ab.x +
-ab.y * ab.y
-)
-
-
+Math.sqrt(ab.x ** 2 + ab.y ** 2)
 
 let magCB =
-Math.sqrt(
-cb.x * cb.x +
-cb.y * cb.y
-)
+Math.sqrt(cb.x ** 2 + cb.y ** 2)
 
 
 
 let angle =
-Math.acos(
-dot /
-(magAB * magCB)
-)
-
-
+Math.acos(dot / (magAB * magCB))
 
 return angle * (180 / Math.PI)
 
@@ -508,43 +371,66 @@ return angle * (180 / Math.PI)
 
 
 
-function updateSquatUI() {
+function updateCounter(type, reps) {
 
 document.getElementById(
-"squatCounter"
+type + "Counter"
 ).innerText =
-"Squats: " + squatCount
+type + ": " + counters[type]
 
 
 
-if (squatCount >= 20) {
+if (counters[type] >= reps) {
 
 document.getElementById(
-"done1"
+"done-" + type
 ).innerText =
 " ✅"
 
-exercisesDone[1] = true
+exercisesDone[type] = true
 
-checkAllDone()
+checkLevelComplete()
 
-speak(
-"Exercise completed"
+}
+
+}
+
+
+
+function checkLevelComplete() {
+
+let level =
+gameData.level
+
+let exercises =
+levelConfig[level]
+
+let allDone =
+exercises.every(
+ex => exercisesDone[ex.type]
 )
 
-}
+
+
+if (allDone) {
+
+document.getElementById(
+"completeBtn"
+).disabled = false
 
 }
 
+}
 
 
-function speak(text) {
 
-let msg =
-new SpeechSynthesisUtterance()
+function completeLevel() {
 
-msg.text = text
+gameData.level++
 
-speechSynthesis.speak(msg)
+gameData.xp += 100
+gameData.gold += 50
+
+alert("LEVEL COMPLETE!")
 
 }
