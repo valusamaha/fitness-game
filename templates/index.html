@@ -9,46 +9,48 @@
 
 <div class="container">
 
-    <h1 class="title">⚔️ FitQuest</h1>
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen">
 
-    <div class="card">
+        <h1 class="title">⚔️ FitQuest</h1>
 
-        <h2 id="rank">LEVEL 1 — RECRUIT</h2>
+        <input type="text" id="username" placeholder="Enter your name">
 
-        <p>XP: <span id="xp">0</span></p>
+        <br><br>
 
-        <div class="progress-bar">
-            <div class="progress" id="progress"></div>
+        <button onclick="startGame()">START GAME</button>
+
+    </div>
+
+    <!-- GAME SCREEN -->
+    <div id="game-screen" style="display:none;">
+
+        <h1 class="title">⚔️ FitQuest</h1>
+
+        <h2 id="welcome"></h2>
+
+        <div class="card">
+            <h2 id="rank">LEVEL 1 — RECRUIT</h2>
+            <p>XP: <span id="xp">0</span></p>
+
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+
+            <p>HP: <span id="hp">100</span></p>
+            <p>Gold: <span id="gold">0</span></p>
         </div>
 
-        <p>HP: <span id="hp">100</span></p>
-        <p>Gold: <span id="gold">0</span></p>
+        <div class="quest-card">
+            <h3>Daily Quest</h3>
+            <p>Complete 20 Pushups</p>
+        </div>
 
-    </div>
-
-    <div class="quest-card">
-
-        <h3>Daily Quest</h3>
-
-        <p>
-        Complete 20 Pushups
-        </p>
-
-    </div>
-
-    <div class="buttons">
-
-        <button onclick="completeWorkout()">
-        START QUEST
-        </button>
-
-        <button onclick="extraWorkout()">
-        EXTRA TRAINING
-        </button>
-
-        <button onclick="missedDay()">
-        REST DAY
-        </button>
+        <div class="buttons">
+            <button onclick="completeWorkout()">START QUEST</button>
+            <button onclick="extraWorkout()">EXTRA TRAINING</button>
+            <button onclick="missedDay()">REST DAY</button>
+        </div>
 
     </div>
 

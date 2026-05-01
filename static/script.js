@@ -1,3 +1,18 @@
+function startGame() {
+
+    let name = document.getElementById("username").value
+
+    if (name === "") {
+        alert("Enter your name first!")
+        return
+    }
+
+    document.getElementById("login-screen").style.display = "none"
+    document.getElementById("game-screen").style.display = "block"
+
+    document.getElementById("welcome").innerText =
+        "Welcome, " + name + " ⚔️"
+}
 function updateUI(data) {
 
     document.getElementById("xp").innerText = data.xp
