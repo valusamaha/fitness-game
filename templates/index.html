@@ -7,6 +7,10 @@
 
 <link rel="stylesheet" href="/static/style.css">
 
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+
 </head>
 
 <body>
@@ -137,14 +141,17 @@ START VIDEO
 
 <p>Complete 20 Squats</p>
 
-<button onclick="startExercise(1)">
+<button onclick="startSquatAI()">
 START VIDEO
 </button>
+
+<h3 id="squatCounter">
+Squats: 0
+</h3>
 
 <span id="done1"></span>
 
 </div>
-
 <br>
 
 <div class="exercise">

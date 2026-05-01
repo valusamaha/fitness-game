@@ -335,3 +335,216 @@ JSON.parse(saved)
 }
 
 }
+
+let squatCount = 0
+let squatPosition = "up"
+
+function startSquatAI() {
+
+navigator.mediaDevices
+.getUserMedia({ video: true })
+.then(function(stream) {
+
+let video =
+document.getElementById("video")
+
+video.srcObject = stream
+
+initializePose(video)
+
+})
+
+}
+
+
+
+function initializePose(videoElement) {
+
+const pose = new Pose({
+
+locateFile: (file) => {
+
+return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`
+
+}
+
+})
+
+pose.setOptions({
+
+modelComplexity: 0,
+smoothLandmarks: true,
+enableSegmentation: false,
+minDetectionConfidence: 0.5,
+minTrackingConfidence: 0.5
+
+})
+
+pose.onResults(onResults)
+
+
+
+const camera = new Camera(videoElement, {
+
+onFrame: async () => {
+
+await pose.send({
+image: videoElement
+})
+
+},
+
+width: 640,
+height: 480
+
+})
+
+camera.start()
+
+}
+
+
+
+function onResults(results) {
+
+if (!results.poseLandmarks)
+return
+
+
+
+let hip =
+results.poseLandmarks[24]
+
+let knee =
+results.poseLandmarks[26]
+
+let ankle =
+results.poseLandmarks[28]
+
+
+
+let angle =
+calculateAngle(
+hip,
+knee,
+ankle
+)
+
+
+
+if (angle < 90 && squatPosition === "up") {
+
+squatPosition = "down"
+
+}
+
+
+
+if (angle > 160 && squatPosition === "down") {
+
+squatPosition = "up"
+
+squatCount++
+
+updateSquatUI()
+
+}
+
+}
+
+
+
+function calculateAngle(a, b, c) {
+
+let ab = {
+
+x: a.x - b.x,
+y: a.y - b.y
+
+}
+
+let cb = {
+
+x: c.x - b.x,
+y: c.y - b.y
+
+}
+
+
+
+let dot =
+ab.x * cb.x +
+ab.y * cb.y
+
+
+
+let magAB =
+Math.sqrt(
+ab.x * ab.x +
+ab.y * ab.y
+)
+
+
+
+let magCB =
+Math.sqrt(
+cb.x * cb.x +
+cb.y * cb.y
+)
+
+
+
+let angle =
+Math.acos(
+dot /
+(magAB * magCB)
+)
+
+
+
+return angle * (180 / Math.PI)
+
+}
+
+
+
+function updateSquatUI() {
+
+document.getElementById(
+"squatCounter"
+).innerText =
+"Squats: " + squatCount
+
+
+
+if (squatCount >= 20) {
+
+document.getElementById(
+"done1"
+).innerText =
+" ✅"
+
+exercisesDone[1] = true
+
+checkAllDone()
+
+speak(
+"Exercise completed"
+)
+
+}
+
+}
+
+
+
+function speak(text) {
+
+let msg =
+new SpeechSynthesisUtterance()
+
+msg.text = text
+
+speechSynthesis.speak(msg)
+
+}
